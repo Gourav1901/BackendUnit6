@@ -6,7 +6,7 @@ app.use(express.json());
 
 const validateTodo = require('./validateTodo');
 
-app.post('/',validdateTodo,(req,res)=>{
+app.post('/',validateTodo,(req,res)=>{
   res.status(200).json({message:'data received'});
 });
 
