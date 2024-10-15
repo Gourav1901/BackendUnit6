@@ -1,12 +1,24 @@
-const express = require("express")
+const express = require('express');
+const mongoose = require('mongoose');
+const studentRoutes = require('./routes/studentRoutes');  // Import routes
 
 const app = express();
-const PORT = 5000;
+app.use(express.json());  // Middleware to parse JSON
 
-app.use(express.json());
-app.use(movie);
+// Connect to MongoDB
+mongoose.connect('mongodb://127.0.0.1:27017/newdb', {
+  useNewUrlParser: true,
+  useUnifiedTopology: true,
+}).then(() => {
+  console.log('Connected to MongoDB');
+}).catch((err) => {
+  console.error('Failed to connect to MongoDB:', err);
+});
 
-app.listen(PORT,() =>{
-  console.log(`server is running on http://localhost${PORT}`);
+// Use student routes for CRUD operations
+app.use('/students', studentRoutes);
 
+const PORT = 3000;
+app.listen(PORT, () => {
+  console.log(`Server running on http://localhost:${PORT}`);
 });
