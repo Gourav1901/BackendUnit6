@@ -1,0 +1,48 @@
+
+1. Most Popular Project
+Formulate a query to find the project with the highest budget by joining the Projects collection with the Departments collection.
+
+db.projects.aggregate([
+  {
+    $lookup: {
+      from: "departments",
+      localField: "department",
+      foreignField: "_id",
+      as: "departmentInfo"
+    }
+  },
+  { $unwind: "$departmentInfo" },
+  { $sort: { budget: -1 } },
+  { $limit: 1 },
+  {
+    $project: {
+      _id: 0,
+      project_name: "$name",
+      budget: 1,
+      department: "$departmentInfo.name"
+    }
+  }
+])
+
+2. Employees in Engineering Department
+Write a query to list all employees working in the 'Engineering' department, sorted by their hire date in ascending order.
+
+db.employees.aggregate([
+  {
+    $lookup: {
+      from: "departments",
+      localField: "department_id",
+      foreignField: "_id",
+      as: "departmentInfo"
+    }
+  },
+  { $unwind: "$departmentInfo" },
+  { $match: { "departmentInfo.name": "Engineering" } },
+  { $sort: { hire_date: 1 } },
+  { $project: { _id: 0, name: 1, hire_date: 1 } }
+])
+"""
+
+
+
+

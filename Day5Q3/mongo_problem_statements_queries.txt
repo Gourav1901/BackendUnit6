@@ -36,3 +36,73 @@
 
 13. Retrieve the orders grouped by customer_id with the max total:
     db.orders.aggregate([ { $group: { _id: "$customer_id", maxTotal: { $max: "$total" } } } ]);
+
+
+
+    Q2
+
+
+1. Assess the impact of RAM capacity on laptop prices and ratings:
+```mongodb
+db.laptops.aggregate([
+  {
+    $group: {
+      _id: "$ram_memory",
+      averagePrice: { $avg: "$Price" },
+      averageRating: { $avg: "$Rating" },
+      count: { $sum: 1 }
+    }
+  },
+  { $sort: { _id: 1 } }
+]);
+```
+
+2. Investigate the price and rating distribution for gaming laptops:
+```mongodb
+db.laptops.aggregate([
+  {
+    $match: { Model: { $regex: /gaming/i } }
+  },
+  {
+    $group: {
+      _id: "$brand",
+      averagePrice: { $avg: "$Price" },
+      averageRating: { $avg: "$Rating" },
+      averageRAM: { $avg: "$ram_memory" },
+      averageGPU: { $addToSet: "$gpu_type" }
+    }
+  },
+  { $sort: { averagePrice: -1 } }
+]);
+```
+
+3. Analyze warranty periods offered by different brands:
+```mongodb
+db.laptops.aggregate([
+  {
+    $group: {
+      _id: "$brand",
+      averagePrice: { $avg: "$Price" },
+      averageRating: { $avg: "$Rating" },
+      averageWarranty: { $avg: "$year_of_warranty" }
+    }
+  },
+  { $sort: { averagePrice: -1 } }
+]);
+```
+
+4. Examine the relationship between processor brand (Intel, AMD, Apple) and laptop price, rating, and primary storage capacity:
+```mongodb
+db.laptops.aggregate([
+  {
+    $group: {
+      _id: "$processor_brand",
+      averagePrice: { $avg: "$Price" },
+      averageRating: { $avg: "$Rating" },
+      averageStorage: { $avg: "$primary_storage_capacity" }
+    }
+  },
+  { $sort: { averagePrice: -1 } }
+]);
+```
+
